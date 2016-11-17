@@ -17,14 +17,16 @@ function processEvent(event, callback) {
     const command = params.command;
     const channel = params.channel_name;
     const commandText = params.text;
+    let responseText = `Add some text for me to echo, like ${command} Hello!`;
 
-    callback(null, `${user} invoked ${command} in ${channel} with the following text: ${commandText}`);
+    if (commandText !== '') {responseText = commandText;}
+    callback(null, `{"response_type":"in_channel","text":"${responseText}"}`);
 }
 
 exports.handler = (event, context, callback) => {
     const done = (err, res) => callback(null, {
         statusCode: err ? '400' : '200',
-        body: err ? (err.message || err) : JSON.stringify(res),
+        body: err ? (err.message || err) : res,
         headers: {
             'Content-Type': 'application/json',
         },
